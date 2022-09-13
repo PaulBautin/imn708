@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def mip_img(img, range_axial, range_coronal, range_sagital, val_4d):
+def mip_img(img, range_axial, range_coronal, range_sagital, val_4d=None):
     """
     blabla
     method: str
@@ -23,7 +23,7 @@ def mip_img(img, range_axial, range_coronal, range_sagital, val_4d):
         mip_sagital = np.amin(img_data[range_sagital[0]:range_sagital[1], :, :, val_4d], axis=0)
     return mip_axial, mip_coronal, mip_sagital
 
-def MIP_img(img, range_axial, range_coronal, range_sagital, val_4d):
+def MIP_img(img, range_axial, range_coronal, range_sagital, val_4d=None):
     """
     blabla
     method: str
