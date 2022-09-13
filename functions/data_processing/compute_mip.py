@@ -4,7 +4,47 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def mip_MIP_img(img):
+def mip_img(img, range_axial, range_coronal, range_sagital, val_4d):
+    """
+    blabla
+    method: str
+        Should be either 'method1' or 'method2'
+    """
+    # Prepare image for the denoising
+    img_data = np.asarray(img.get_fdata())
+    img_shape = img_data.shape
+    if len(img_shape) == 3:
+        mip_axial = np.amin(img_data[:, :, range_axial[0]:range_axial[1]], axis=2)
+        mip_coronal = np.amin(img_data[:, range_coronal[0]:range_coronal[1], :], axis=1)
+        mip_sagital = np.amin(img_data[range_sagital[0]:range_sagital[1], :, :], axis=0)
+    elif len(img_shape) == 4:
+        mip_axial = np.amin(img_data[:, :, range_axial[0]:range_axial[1], val_4d], axis=2)
+        mip_coronal = np.amin(img_data[:, range_coronal[0]:range_coronal[1], :, val_4d], axis=1)
+        mip_sagital = np.amin(img_data[range_sagital[0]:range_sagital[1], :, :, val_4d], axis=0)
+    return mip_axial, mip_coronal, mip_sagital
+
+def MIP_img(img, range_axial, range_coronal, range_sagital, val_4d):
+    """
+    blabla
+    method: str
+        Should be either 'method1' or 'method2'
+    """
+    # Prepare image for the denoising
+    img_data = np.asarray(img.get_fdata())
+    img_shape = img_data.shape
+    if len(img_shape) == 3:
+        MIP_axial = np.amax(img_data[:,:,range_axial[0]:range_axial[1]], axis=2)
+        MIP_coronal = np.amax(img_data[:,range_coronal[0]:range_coronal[1],:], axis=1)
+        MIP_sagital = np.amax(img_data[range_sagital[0]:range_sagital[1],:,:], axis=0)
+    elif len(img_shape) == 4:
+        MIP_axial = np.amax(img_data[:,:,range_axial[0]:range_axial[1], val_4d], axis=2)
+        MIP_coronal = np.amax(img_data[:,range_coronal[0]:range_coronal[1],:, val_4d], axis=1)
+        MIP_sagital = np.amax(img_data[range_sagital[0]:range_sagital[1],:,:, val_4d], axis=0)
+    return MIP_axial, MIP_coronal, MIP_sagital
+
+
+
+def mip_MIP_viewr(img):
     """
     blabla
     method: str
