@@ -15,7 +15,7 @@ def _load_nifti(filename):
 
     Returns
     -------
-    img: np.ndarray
+    img: Nifti1Image
         The loaded image, as a nibabel image.
     """
     img = nib.load(filename)
@@ -56,7 +56,7 @@ def load_image(filename, from_nifti=False):
     Returns
     -------
     img: np.ndarray
-        The loaded image, as a numpy array.
+        The loaded image, as a numpy array if jpg/png or Nifti1Image if nifti format.
     """
     if from_nifti:
         return _load_nifti(filename)

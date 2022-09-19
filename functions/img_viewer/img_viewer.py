@@ -1,42 +1,49 @@
 # -*- coding: utf-8 -*-
+
+# Import basic python libraries
 import logging
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, RangeSlider, Button
 import numpy as np
-
+# Import our tools
 from functions.data_processing.compute_mip import mip_img, MIP_img
-
 
 
 def viewer(img):
     """
-    Inspired by https://matplotlib.org/stable/gallery/widgets/slider_demo.html
-    method: str
-        Should be either 'method1' or 'method2'
+    viewer verifies is either 3D or 4D and dipatches 3D images to viewer3d and 4D images to viewer4d
+
+    Parameters
+    ----------
+    img: nibabel Nifti1Image
+        Nibabel image to be viewed
     """
-    # Prepare image for the denoising
-    img_data = img.get_fdata()
+    img_data = np.asarray(img.get_fdata())
     img_shape = np.asarray(img_data.shape)
     print(img_shape)
     if len(img_shape) == 3:
-        viewer3d(img_data, img_shape, img)
+        viewer3d(img_data, img_shape)
         logging.info("3d data")
     elif len(img_shape) == 4:
-        viewer4d(img_data, img_shape, img)
+        viewer4d(img_data, img_shape)
         logging.info("4d data")
     else:
         logging.error("image is neither 3D or 4D")
 
 
-def viewer3d(img_data, img_shape, img):
+def viewer3d(img_data, img_shape):
     """
-    blabla
-    use_method_y: bool
-        If true, use method y. Else, use method x.
+    viewer for 3D images. Code was inspired by https://matplotlib.org/stable/gallery/widgets/slider_demo.html
+
+    Parameters
+    ----------
+    img_data: numpy.ndarray
+        image data information (each voxel intensity is encoded in a numpy array)
+    img_shape: numpy.ndarray
+        image shape information (each dimension voxel length is encoded in a numpy array)
     """
-    # Define initial parameters
+    # Define initial position
     pos_init = img_shape // 2
-    range_axial, range_coronal, range_sagital = [25,30], [25,30], [25,30]
 
     fig, ax = plt.subplots(1, 3)
     img_view_axial = ax[0].imshow(img_data[:, :, pos_init[2]].T, origin='lower')
@@ -49,7 +56,7 @@ def viewer3d(img_data, img_shape, img):
     # adjust the main plot to make room for the sliders
     plt.subplots_adjust(bottom=0.5)
 
-    # Make a horizontal slider to control the position.
+    # Make a inferior/superior slider to control the axial slice.
     axPos_axial = plt.axes([0.25, 0.1, 0.65, 0.03])
     pos_slider_axial = RangeSlider(
         ax=axPos_axial,
@@ -58,7 +65,7 @@ def viewer3d(img_data, img_shape, img):
         valmax=img_shape[2] - 1,
         valstep=1,
     )
-    # Make a horizontal slider to control the position.
+    # Make a posterior/anterior slider to control the coronal slice.
     axPos_coronal = plt.axes([0.25, 0.2, 0.65, 0.03])
     pos_slider_coronal = RangeSlider(
         ax=axPos_coronal,
@@ -67,7 +74,7 @@ def viewer3d(img_data, img_shape, img):
         valmax=img_shape[1] - 1,
         valstep=1,
     )
-    # Make a horizontal slider to control the position.
+    # Make a left/right slider to control the sagittal slice.
     axPos_sagital = plt.axes([0.25, 0.3, 0.65, 0.03])
     pos_slider_sagital = RangeSlider(
         ax=axPos_sagital,
@@ -76,15 +83,23 @@ def viewer3d(img_data, img_shape, img):
         valmax=img_shape[0] - 1,
         valstep=1,
     )
-    # Create a `matplotlib.widgets.Button` to reset the sliders to initial values.
+    # Create a `matplotlib.widgets.Button` to view mip projection.
     mip_button = plt.axes([0.15, 0.01, 0.3, 0.05])
     button_mip = Button(mip_button, 'View mip', hovercolor='0.975')
-    # Create a `matplotlib.widgets.Button` to reset the sliders to initial values.
+    # Create a `matplotlib.widgets.Button` to view MIP projection.
     MIP_button = plt.axes([0.55, 0.01, 0.3, 0.05])
     button_MIP = Button(MIP_button, 'View MIP', hovercolor='0.975')
 
-    # The function to be called anytime a slider's value changes
+    # The function to be called anytime the mip button is pressed
     def view_mip(event):
+        """
+        The function to be called anytime the mip button is pressed to compute mip projection
+
+        Parameters
+        ----------
+        event:
+            button press
+        """
         range_axial = [int(pos_slider_axial.val[0]), int(pos_slider_axial.val[1])]
         range_coronal = [int(pos_slider_coronal.val[0]), int(pos_slider_coronal.val[1])]
         range_sagital = [int(pos_slider_sagital.val[0]), int(pos_slider_sagital.val[1])]
@@ -94,8 +109,16 @@ def viewer3d(img_data, img_shape, img):
         img_view_sagital.set_data(mip_sagital.T)
         fig.canvas.draw_idle()
 
-    # The function to be called anytime a slider's value changes
+    # The function to be called anytime the MIP button is pressed
     def view_MIP(event):
+        """
+        The function to be called anytime the MIP button is pressed to compute MIP projection
+
+        Parameters
+        ----------
+        event:
+            button press
+        """
         range_axial = [int(pos_slider_axial.val[0]), int(pos_slider_axial.val[1])]
         range_coronal = [int(pos_slider_coronal.val[0]), int(pos_slider_coronal.val[1])]
         range_sagital = [int(pos_slider_sagital.val[0]), int(pos_slider_sagital.val[1])]
@@ -105,9 +128,16 @@ def viewer3d(img_data, img_shape, img):
         img_view_sagital.set_data(MIP_sagital.T)
         fig.canvas.draw_idle()
 
-
     # The function to be called anytime a slider's value changes
     def update(val):
+        """
+        The function to be called anytime a slider's value changes
+
+        Parameters
+        ----------
+        val: list
+            RangeSlider values. val[0]: start of range and val[1]: end of range
+        """
         img_view_axial.set_data(img_data[:, :, int(pos_slider_axial.val[0])].T)
         img_view_coronal.set_data(img_data[:, int(pos_slider_coronal.val[0]), :].T)
         img_view_sagital.set_data(img_data[int(pos_slider_sagital.val[0]), :, :].T)
@@ -122,15 +152,21 @@ def viewer3d(img_data, img_shape, img):
     plt.show()
 
 
-def viewer4d(img_data, img_shape, img):
+def viewer4d(img_data, img_shape):
     """
-    blabla
-    use_method_y: bool
-        If true, use method y. Else, use method x.
+    viewer for 4D images. Code was inspired by https://matplotlib.org/stable/gallery/widgets/slider_demo.html
+
+    Parameters
+    ----------
+    img_data: numpy.ndarray
+        image data information (each voxel intensity is encoded in a numpy array)
+    img_shape: numpy.ndarray
+        image shape information (each dimension voxel length is encoded in a numpy array)
     """
-    # Define initial parameters
+    # Define initial position of viewer
     pos_init = img_shape // 2
 
+    # plot initial positions
     fig, ax = plt.subplots(1, 3)
     img_view_axial = ax[0].imshow(img_data[:, :, pos_init[2], pos_init[3]].T, origin='lower')
     ax[0].set_title("Axial slice of image")
@@ -142,7 +178,7 @@ def viewer4d(img_data, img_shape, img):
     # adjust the main plot to make room for the sliders
     plt.subplots_adjust(bottom=0.5)
 
-    # Make a horizontal slider to control the position.
+    # Make a inferior/superior slider to control the axial slice.
     axPos_axial = plt.axes([0.25, 0.1, 0.65, 0.03])
     pos_slider_axial = RangeSlider(
         ax=axPos_axial,
@@ -151,7 +187,7 @@ def viewer4d(img_data, img_shape, img):
         valmax=img_shape[2] - 1,
         valstep=1,
     )
-    # Make a horizontal slider to control the position.
+    # Make a posterior/anterior slider to control the coronal slice.
     axPos_coronal = plt.axes([0.25, 0.2, 0.65, 0.03])
     pos_slider_coronal = RangeSlider(
         ax=axPos_coronal,
@@ -160,7 +196,7 @@ def viewer4d(img_data, img_shape, img):
         valmax=img_shape[1] - 1,
         valstep=1,
     )
-    # Make a horizontal slider to control the position.
+    # Make a left/right slider to control the sagittal slice.
     axPos_sagital = plt.axes([0.25, 0.3, 0.65, 0.03])
     pos_slider_sagital = RangeSlider(
         ax=axPos_sagital,
@@ -169,7 +205,7 @@ def viewer4d(img_data, img_shape, img):
         valmax=img_shape[0] - 1,
         valstep=1,
     )
-    # Make a horizontal slider to control the position.
+    # Make a 4th dimension slider to control the 4th dimension.
     axPos_4d = plt.axes([0.25, 0.4, 0.65, 0.03])
     pos_slider_4d = Slider(
         ax=axPos_4d,
@@ -180,39 +216,62 @@ def viewer4d(img_data, img_shape, img):
         valstep=1,
     )
 
-    # Create a `matplotlib.widgets.Button` to reset the sliders to initial values.
+    # Create a `matplotlib.widgets.Button` to view mip projection.
     mip_button = plt.axes([0.15, 0.01, 0.3, 0.05])
     button_mip = Button(mip_button, 'View mip', hovercolor='0.975')
-    # Create a `matplotlib.widgets.Button` to reset the sliders to initial values.
+    # Create a `matplotlib.widgets.Button` to view MIP projection.
     MIP_button = plt.axes([0.55, 0.01, 0.3, 0.05])
     button_MIP = Button(MIP_button, 'View MIP', hovercolor='0.975')
 
-    # The function to be called anytime a slider's value changes
+    # The function to be called anytime the mip button is pressed
     def view_mip(event):
+        """
+        The function to be called anytime the mip button is pressed to compute mip projection
+
+        Parameters
+        ----------
+        event:
+            button press
+        """
         range_axial = [int(pos_slider_axial.val[0]), int(pos_slider_axial.val[1])]
         range_coronal = [int(pos_slider_coronal.val[0]), int(pos_slider_coronal.val[1])]
         range_sagital = [int(pos_slider_sagital.val[0]), int(pos_slider_sagital.val[1])]
         val_4d = int(pos_slider_4d.val)
-        mip_axial, mip_coronal, mip_sagital = mip_img(img, range_axial, range_coronal, range_sagital, val_4d)
+        mip_axial, mip_coronal, mip_sagital = mip_img(img_data, range_axial, range_coronal, range_sagital, val_4d)
         img_view_axial.set_data(mip_axial.T)
         img_view_coronal.set_data(mip_coronal.T)
         img_view_sagital.set_data(mip_sagital.T)
         fig.canvas.draw_idle()
 
-    # The function to be called anytime a slider's value changes
+
     def view_MIP(event):
+        """
+        The function to be called anytime the MIP button is pressed to compute MIP projection
+
+        Parameters
+        ----------
+        event:
+            button press
+        """
         range_axial = [int(pos_slider_axial.val[0]), int(pos_slider_axial.val[1])]
         range_coronal = [int(pos_slider_coronal.val[0]), int(pos_slider_coronal.val[1])]
         range_sagital = [int(pos_slider_sagital.val[0]), int(pos_slider_sagital.val[1])]
         val_4d = int(pos_slider_4d.val)
-        MIP_axial, MIP_coronal, MIP_sagital = MIP_img(img, range_axial, range_coronal, range_sagital, val_4d)
+        MIP_axial, MIP_coronal, MIP_sagital = MIP_img(img_data, range_axial, range_coronal, range_sagital, val_4d)
         img_view_axial.set_data(MIP_axial.T)
         img_view_coronal.set_data(MIP_coronal.T)
         img_view_sagital.set_data(MIP_sagital.T)
         fig.canvas.draw_idle()
 
-    # The function to be called anytime a slider's value changes
     def update(val):
+        """
+        The function to be called anytime a slider's value changes
+
+        Parameters
+        ----------
+        val: list
+            RangeSlider values. val[0]: start of range and val[1]: end of range
+        """
         img_view_axial.set_data(img_data[:, :, int(pos_slider_axial.val[0]), int(pos_slider_4d.val)].T)
         img_view_coronal.set_data(img_data[:, int(pos_slider_coronal.val[0]), :, int(pos_slider_4d.val)].T)
         img_view_sagital.set_data(img_data[int(pos_slider_sagital.val[0]), :, :, int(pos_slider_4d.val)].T)
