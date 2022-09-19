@@ -2,32 +2,22 @@
 # -*- coding: utf-8 -*-
 
 """
-This is a description of the script. This description will appear in the help
-when typing
->>> python view_image.py -h
+view_image is an an interactive visualizer which
+is used to display all slices in each plane. Example: Axial, Coronal and Sagital
 
-To see the args received, a basic example can be:
->>> python view_image.py 'my_file.nii.gz' 1.0
-
-The complete example can be:
->>> python view_image.py 'my_file.nii.gz' 1.0
-        --optional_float 0.001 --optional_int 2
-        --group_arg1 'Hello' --group_arg2 'You' --use_option_Y -v
+Command usage example
+>>> python view_image.py 'my_file.nii.gz'
 """
 
-# First import basic python libraries
+# Import basic python libraries
 import argparse
 import logging
 
-# Then import yours.
-# Encapsulate your methods in sub-files.
-# Give them understandable names
-# Import by alphabetical order for nicer view.
+# Import our tools
 from functions.utils.io import load_image
 from functions.utils.manage_args import (
     verify_file_exists, verify_file_is_nifti)
 from functions.img_viewer.img_viewer import viewer
-
 
 
 def _build_arg_parser():
@@ -37,7 +27,7 @@ def _build_arg_parser():
 
     p.add_argument('filename',
                    help="Image filename to be loaded. Image should be a nifti "
-                        "file.")  # Always write a good explanation!
+                        "file.")
 
     # Typical arg: add debugging prints or not
     p.add_argument('-v', action='store_true', dest='verbose',

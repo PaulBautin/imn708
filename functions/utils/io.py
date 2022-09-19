@@ -1,29 +1,53 @@
 # -*- coding: utf-8 -*-
 import nibabel as nib
 import numpy as np
-import os
-
+import matplotlib.image as mpimg
 
 
 def _load_nifti(filename):
+    """
+    load_nifti loads image from filename with nibabel and returns the loaded image as a nibabel image
+
+    Parameters
+    ----------
+    filename: str
+        Image filename to be loaded.
+
+    Returns
+    -------
+    img: np.ndarray
+        The loaded image, as a nibabel image.
+    """
     img = nib.load(filename)
     return img
 
 
 def _load_png_jpg(filename):
-    raise NotImplementedError
-
-
-def load_image(filename, from_nifti=False):
     """
-    Always provide method expanation.
-    In this example, I used an optional variable just to show you it
-    exists. Define methods as you wish.
+    load_png_jpg loads image from filename with matplotlib and returns the loaded image as a numpy array.
 
     Parameters
     ----------
     filename: str
-        Always provide parameter explanations.
+        Image filename to be loaded.
+
+    Returns
+    -------
+    img: np.ndarray
+        The loaded image, as a numpy array.
+    """
+    img = mpimg.imread(filename)
+    return img
+
+
+def load_image(filename, from_nifti=False):
+    """
+    load_image loads image from filename and returns the loaded image ad a numpy array
+
+    Parameters
+    ----------
+    filename: str
+        Image filename to be loaded.
     from_nifti: bool
         If this value is true, we will load the image from nibabel. Else,
         (default), we expect value to be loadable from matplotlib (ex, png,
