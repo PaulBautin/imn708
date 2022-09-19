@@ -5,12 +5,12 @@ import os
 
 def verify_file_exists(filename):
     """
-    Assert that file exists
+    Assert that file exists else returns error
 
     Parameters
     ----------
     filename: str
-        Always provide parameter explanations.
+        Image filename to verify existence.
 
     """
     if os.path.isfile(filename):
@@ -22,12 +22,12 @@ def verify_file_exists(filename):
 
 def verify_file_is_nifti(filename):
     """
-    Assert that file is in nifti format
+    Assert that file is in nifti format else returns error
 
     Parameters
     ----------
     filename: str
-        Always provide parameter explanations.
+        Image filename to verify nifti format.
 
     """
 
