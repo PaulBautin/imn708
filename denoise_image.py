@@ -2,32 +2,23 @@
 # -*- coding: utf-8 -*-
 
 """
-This is a description of the script. This description will appear in the help
-when typing
->>> python view_image.py -h
+view_image is automated script for image denoising and comparative plotting.
 
-To see the args received, a basic example can be:
->>> python view_image.py 'my_file.nii.gz' 1.0
-
-The complete example can be:
->>> python view_image.py 'my_file.nii.gz' 1.0
-        --optional_float 0.001 --optional_int 2
-        --group_arg1 'Hello' --group_arg2 'You' --use_option_Y -v
+Command usage example
+>>> python denoise_image.py 'my_file.nii.gz' --method 'gaussian' --sigma 2
 """
 
-# First import basic python libraries
+# Import basic python libraries
 import argparse
 import logging
+import nibabel as nib
+import os
 
-# Then import yours.
-# Encapsulate your methods in sub-files.
-# Give them understandable names
-# Import by alphabetical order for nicer view.
+# Import our tools
 from functions.utils.io import load_image
 from functions.utils.manage_args import (
     verify_file_exists, verify_file_is_nifti)
 from functions.data_processing.filter_img import denoise_img
-
 
 
 def _build_arg_parser():
@@ -37,10 +28,40 @@ def _build_arg_parser():
 
     p.add_argument('filename',
                    help="Image filename to be loaded. Image should be a nifti "
-                        "file.")  # Always write a good explanation!
+                        "file.")
     p.add_argument('--method',
-                   help="Image filename to be loaded. Image should be a nifti "
-                        "file.")  # Always write a good explanation!
+                   help="Denoising method. choices: 'gaussian', 'median', 'nl_means'")
+
+    gaussian = p.add_argument_group(title='Options concerning gaussian filter')
+    gaussian.add_argument('--sigma',
+                          type=int,
+                          default=2,
+                          help="Standard deviation for Gaussian kernel. The standard deviations of the Gaussian "
+                               "filter are given for each axis as a sequence, or as a single number, in which case "
+                               "it is equal for all axes. Example --sigma 2")
+
+    median = p.add_argument_group(title='Options concerning median filter')
+    median.add_argument('--size',
+                          type=int,
+                          default=5,
+                          help="size gives the shape that is taken from the input array, at every element position, "
+                               "to define the input to the filter function. Example --size 5")
+
+    nl_means = p.add_argument_group(title='Options concerning nl_means filter')
+    nl_means.add_argument('--patch_size',
+                          type=int,
+                          default=7,
+                          help="Size of patches used for denoising. Example: --patch_size 7 -> 7x7x7 patches")
+    nl_means.add_argument('--patch_distance',
+                          type=int,
+                          default=11,
+                          help="Maximal distance in pixels where to search patches used for denoising. "
+                               "Example: --patch_distance 11 -> 23x23x23 search area")
+
+    p.add_argument('--output',
+                   action='store_true',
+                   help="Use flag to save denoised image else the image is not saved. By default the image is saved "
+                        "under the same filename as input with suffix '_<denoise methode>'")
 
     # Typical arg: add debugging prints or not
     p.add_argument('-v', action='store_true', dest='verbose',
@@ -68,7 +89,13 @@ def main():
     img = load_image(args.filename, from_nifti=True)
 
     # 3. Process data
-    denoise_img(img, method=args.method)
+    denoised_image = denoise_img(img, args.method, args.sigma, args.size, args.patch_size, args.patch_distance)
+
+    # 4. Save image
+    if args.output:
+        path, ext = os.path.splitext(args.filename)
+        denoised_nib = nib.Nifti1Image(denoised_image, affine=img.affine, header=img.header)
+        nib.save(denoised_nib, path + '_' + args.method + ext)
 
 
 if __name__ == "__main__":

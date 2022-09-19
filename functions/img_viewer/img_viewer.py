@@ -11,7 +11,7 @@ from functions.data_processing.compute_mip import mip_img, MIP_img
 
 def viewer(img):
     """
-    viewer verifies is either 3D or 4D and dipatches 3D images to viewer3d and 4D images to viewer4d
+    viewer verifies is either 3D or 4D and dispatches 3D images to viewer3d and 4D images to viewer4d
 
     Parameters
     ----------

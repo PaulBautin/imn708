@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-view_image is an an interactive visualizer which
-is used to display all slices in each plane. Example: Axial, Coronal and Sagital
+view_image is an interactive visualizer which
+is used to display all slices in each plane and compute mip/MIP projections on main
+plains: Axial, Coronal and Sagital
 
 Command usage example
 >>> python view_image.py 'my_file.nii.gz'
