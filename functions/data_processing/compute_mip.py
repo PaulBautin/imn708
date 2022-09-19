@@ -21,18 +21,27 @@ def mip_img(img_data, range_axial, range_coronal, range_sagital, val_4d=None):
         left/right axis range to compute mip. range_axial[0] -> start, range_axial[1] -> end
     val_4d: bool
         Take into account 4th dimension if True
+
+    Returns
+    -------
+    mip_axial: np.ndarray
+        mip projection on axial plane
+    mip_coronal: np.ndarray
+        mip projection on coronal plane
+    mip_sagittal: np.ndarray
+        mip projection on sagittal plane
     """
-    # Prepare image for the denoising
+    # Verify image dimensions
     img_shape = img_data.shape
     if len(img_shape) == 3:
         mip_axial = np.amin(img_data[:, :, range_axial[0]:range_axial[1]], axis=2)
         mip_coronal = np.amin(img_data[:, range_coronal[0]:range_coronal[1], :], axis=1)
-        mip_sagital = np.amin(img_data[range_sagital[0]:range_sagital[1], :, :], axis=0)
+        mip_sagittal = np.amin(img_data[range_sagital[0]:range_sagital[1], :, :], axis=0)
     elif len(img_shape) == 4:
         mip_axial = np.amin(img_data[:, :, range_axial[0]:range_axial[1], val_4d], axis=2)
         mip_coronal = np.amin(img_data[:, range_coronal[0]:range_coronal[1], :, val_4d], axis=1)
-        mip_sagital = np.amin(img_data[range_sagital[0]:range_sagital[1], :, :, val_4d], axis=0)
-    return mip_axial, mip_coronal, mip_sagital
+        mip_sagittal = np.amin(img_data[range_sagital[0]:range_sagital[1], :, :, val_4d], axis=0)
+    return mip_axial, mip_coronal, mip_sagittal
 
 def MIP_img(img_data, range_axial, range_coronal, range_sagital, val_4d=None):
     """
@@ -50,17 +59,26 @@ def MIP_img(img_data, range_axial, range_coronal, range_sagital, val_4d=None):
         left/right axis range to compute MIP. range_axial[0] -> start, range_axial[1] -> end
     val_4d: bool
         Take into account 4th dimension if True
+
+    Returns
+    -------
+    MIP_axial: np.ndarray
+        mip projection on axial plane
+    MIP_coronal: np.ndarray
+        mip projection on coronal plane
+    MIP_sagittal: np.ndarray
+        mip projection on sagittal plane
     """
     img_shape = img_data.shape
     if len(img_shape) == 3:
         MIP_axial = np.amax(img_data[:,:,range_axial[0]:range_axial[1]], axis=2)
         MIP_coronal = np.amax(img_data[:,range_coronal[0]:range_coronal[1],:], axis=1)
-        MIP_sagital = np.amax(img_data[range_sagital[0]:range_sagital[1],:,:], axis=0)
+        MIP_sagittal = np.amax(img_data[range_sagital[0]:range_sagital[1],:,:], axis=0)
     elif len(img_shape) == 4:
         MIP_axial = np.amax(img_data[:,:,range_axial[0]:range_axial[1], val_4d], axis=2)
         MIP_coronal = np.amax(img_data[:,range_coronal[0]:range_coronal[1],:, val_4d], axis=1)
-        MIP_sagital = np.amax(img_data[range_sagital[0]:range_sagital[1],:,:, val_4d], axis=0)
-    return MIP_axial, MIP_coronal, MIP_sagital
+        MIP_sagittal = np.amax(img_data[range_sagital[0]:range_sagital[1],:,:, val_4d], axis=0)
+    return MIP_axial, MIP_coronal, MIP_sagittal
 
 
 
