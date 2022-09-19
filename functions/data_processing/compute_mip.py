@@ -1,14 +1,26 @@
 # -*- coding: utf-8 -*-
-import logging
+
+# Import basic python libraries
 import numpy as np
 import matplotlib.pyplot as plt
 
 
 def mip_img(img_data, range_axial, range_coronal, range_sagital, val_4d=None):
     """
-    blabla
-    method: str
-        Should be either 'method1' or 'method2'
+    Compute minimum intensity projection for each axis
+
+    Parameters
+    ----------
+    img_data: numpy.ndarray
+        image data information (all voxel intensities are encoded in a numpy array)
+    range_axial: list
+        inferior/superior axis range to compute mip. range_axial[0] -> start, range_axial[1] -> end
+    range_coronal: list
+        posterior/anterior axis range to compute mip. range_axial[0] -> start, range_axial[1] -> end
+    range_sagital: list
+        left/right axis range to compute mip. range_axial[0] -> start, range_axial[1] -> end
+    val_4d: bool
+        Take into account 4th dimension if True
     """
     # Prepare image for the denoising
     img_shape = img_data.shape
@@ -24,9 +36,20 @@ def mip_img(img_data, range_axial, range_coronal, range_sagital, val_4d=None):
 
 def MIP_img(img_data, range_axial, range_coronal, range_sagital, val_4d=None):
     """
-    blabla
-    method: str
-        Should be either 'method1' or 'method2'
+    Compute maximum intensity projection for each axis
+
+    Parameters
+    ----------
+    img_data: numpy.ndarray
+        image data information (all voxel intensities are encoded in a numpy array)
+    range_axial: list
+        inferior/superior axis range to compute MIP. range_axial[0] -> start, range_axial[1] -> end
+    range_coronal: list
+        posterior/anterior axis range to compute MIP. range_axial[0] -> start, range_axial[1] -> end
+    range_sagital: list
+        left/right axis range to compute MIP. range_axial[0] -> start, range_axial[1] -> end
+    val_4d: bool
+        Take into account 4th dimension if True
     """
     img_shape = img_data.shape
     if len(img_shape) == 3:
@@ -43,9 +66,12 @@ def MIP_img(img_data, range_axial, range_coronal, range_sagital, val_4d=None):
 
 def mip_MIP_viewr(img_data):
     """
-    blabla
-    method: str
-        Should be either 'method1' or 'method2'
+    Plot Maximal and minimum intensity projection for each plane: axial, coronal, sagital
+
+    Parameters
+    ----------
+    img_data: numpy.ndarray
+        image data information (all voxel intensities are encoded in a numpy array)
     """
     mip_axial = np.amin(img_data, axis=2)
     mip_coronal = np.amin(img_data, axis=1)

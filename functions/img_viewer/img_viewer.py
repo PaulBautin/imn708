@@ -38,9 +38,9 @@ def viewer3d(img_data, img_shape):
     Parameters
     ----------
     img_data: numpy.ndarray
-        image data information (each voxel intensity is encoded in a numpy array)
+        image data information (all voxel intensities are encoded in a numpy array)
     img_shape: numpy.ndarray
-        image shape information (each dimension voxel length is encoded in a numpy array)
+        image shape information (all dimension voxel lengths are encoded in a numpy array)
     """
     # Define initial position
     pos_init = img_shape // 2
@@ -159,9 +159,9 @@ def viewer4d(img_data, img_shape):
     Parameters
     ----------
     img_data: numpy.ndarray
-        image data information (each voxel intensity is encoded in a numpy array)
+        image data information (all voxel intensities are encoded in a numpy array)
     img_shape: numpy.ndarray
-        image shape information (each dimension voxel length is encoded in a numpy array)
+        image shape information (all dimension voxel lengths are encoded in a numpy array)
     """
     # Define initial position of viewer
     pos_init = img_shape // 2
