@@ -15,21 +15,39 @@ def viewer(img):
 
     Parameters
     ----------
-    img: nibabel Nifti1Image
-        Nibabel image to be viewed
+    img:
+        Nibabel image to be viewed for 3d or 4d images, numpy array for 2d images
     """
-    img_data = np.asarray(img.get_fdata())
-    img_shape = np.asarray(img_data.shape)
+    img_shape = np.asarray(img.shape)
     print(img_shape)
-    if len(img_shape) == 3:
+    if len(img_shape) == 2:
+        viewer2d(img)
+        logging.info("2d data")
+    elif len(img_shape) == 3:
+        img_data = np.asarray(img.get_fdata())
         viewer3d(img_data, img_shape)
         logging.info("3d data")
     elif len(img_shape) == 4:
+        img_data = np.asarray(img.get_fdata())
         viewer4d(img_data, img_shape)
         logging.info("4d data")
     else:
-        logging.error("image is neither 3D or 4D")
+        logging.error("image is neither 2D, 3D or 4D")
 
+
+def viewer2d(img_data):
+    """
+    viewer for 2D images. No information on slice position
+
+    Parameters
+    ----------
+    img_data: numpy.ndarray
+        image data information (all voxel intensities are encoded in a numpy array)
+    """
+    fig, ax = plt.subplots(1, 1)
+    ax.imshow(img_data[:, :])
+    ax.set_title("Slice of image")
+    plt.show()
 
 def viewer3d(img_data, img_shape):
     """

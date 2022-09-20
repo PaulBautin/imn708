@@ -29,12 +29,19 @@ def verify_file_is_nifti(filename):
     filename: str
         Image filename to verify nifti format.
 
+    Return
+    ----------
+    from_nifti: bool
+        True if image is in nifti format otherwise false
+
     """
 
     # Nifti = .nii or .nii.gz
     _, ext = os.path.splitext(filename)
+    from_nifti = True
 
     if ext not in ['.nii', '.gz']:
         logging.warning("Expected nifti file, but extension was not .nii or "
-                        ".nii.gz. Continuing, but the loading will probably "
-                        "fail!")
+                        ".nii.gz. Continuing with matplotlib loading!")
+        from_nifti = False
+    return from_nifti

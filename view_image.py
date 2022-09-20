@@ -46,14 +46,14 @@ def main():
 
     # 1. Verifications
     verify_file_exists(args.filename)
-    verify_file_is_nifti(args.filename)
+    from_nifti = verify_file_is_nifti(args.filename)
 
     logging_level = 'DEBUG' if args.verbose else 'INFO'
     logging.basicConfig(level=logging_level)
 
     # 2. Load data
     logging.info("Loading data")
-    img = load_image(args.filename, from_nifti=True)
+    img = load_image(args.filename, from_nifti)
 
     # 3. Process data
     viewer(img)
