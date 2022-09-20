@@ -18,6 +18,8 @@ The complete example can be:
 # First import basic python libraries
 import argparse
 import logging
+from functions.data_processing.Michelson_Contrast import Michelson_Contrast
+from functions.data_processing.RMS import RMS
 
 # Then import yours.
 # Encapsulate your methods in sub-files.
@@ -30,15 +32,14 @@ from functions.utils.manage_args import (
 from functions.img_viewer.img_viewer import viewer
 
 
-
 def _build_arg_parser():
     p = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawTextHelpFormatter)
 
     p.add_argument('filename',
-                   help="Image filename to be loaded. Image should be a nifti "
-                        "file.")  # Always write a good explanation!
+                   help="Image filename to be loaded. "
+                        "file. ")  # Always write a good explanation!
 
     # Typical arg: add debugging prints or not
     p.add_argument('-v', action='store_true', dest='verbose',
@@ -48,6 +49,7 @@ def _build_arg_parser():
 
 
 def main():
+
     parser = _build_arg_parser()
     args = parser.parse_args()
     print("****\n"
@@ -56,17 +58,19 @@ def main():
 
     # 1. Verifications
     verify_file_exists(args.filename)
-    verify_file_is_nifti(args.filename)
+    from_nifti=verify_file_is_nifti(args.filename)
 
-    logging_level = 'DEBUG' if args.verbose else 'INFO'
-    logging.basicConfig(level=logging_level)
+    # logging_level = 'DEBUG' if args.verbose else 'INFO'
+    # logging.basicConfig(level=logging_level)
 
     # 2. Load data
     logging.info("Loading data")
-    img = load_image(args.filename, from_nifti=True)
+    img = load_image(args.filename, from_nifti)
 
     # 3. Process data
-    voxel_and_image_size(img)
+    # voxel_and_image_size(img)
+    print('Michelson_Contrast: ', Michelson_Contrast(img, from_nifti))
+    print('RMS: ', RMS(img, from_nifti))
 
 
 if __name__ == "__main__":
