@@ -35,7 +35,7 @@ def _build_arg_parser():
     gaussian = p.add_argument_group(title='Options concerning gaussian filter')
     gaussian.add_argument('--sigma',
                           type=int,
-                          default=2,
+                          default=1,
                           help="Standard deviation for Gaussian kernel. The standard deviations of the Gaussian "
                                "filter are given for each axis as a sequence, or as a single number, in which case "
                                "it is equal for all axes. Example --sigma 2")
@@ -43,7 +43,7 @@ def _build_arg_parser():
     median = p.add_argument_group(title='Options concerning median filter')
     median.add_argument('--size',
                           type=int,
-                          default=5,
+                          default=3,
                           help="size gives the shape that is taken from the input array, at every element position, "
                                "to define the input to the filter function. Example --size 5")
 

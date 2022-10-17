@@ -2,6 +2,7 @@
 import nibabel as nib
 import numpy as np
 import matplotlib.image as mpimg
+from PIL import Image
 
 
 def _load_nifti(filename):
@@ -36,7 +37,8 @@ def _load_png_jpg(filename):
     img: np.ndarray
         The loaded image, as a numpy array.
     """
-    img = mpimg.imread(filename)
+    image = Image.open(filename).convert('L')
+    img = np.array(image)
     return img
 
 

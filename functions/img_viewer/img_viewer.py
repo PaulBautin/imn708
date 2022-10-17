@@ -66,9 +66,16 @@ def viewer3d(img_data, img_shape):
     fig, ax = plt.subplots(1, 3)
     img_view_axial = ax[0].imshow(img_data[:, :, pos_init[2]].T, origin='lower')
     ax[0].set_title("Axial slice of image")
+    ax[0].set_xlabel("left/right axis")
+    ax[0].set_ylabel("posterior/anterior axis")
+    ax[0].set_title("Axial slice of image")
     img_view_coronal = ax[1].imshow(img_data[:, pos_init[1], :].T, origin='lower')
+    ax[1].set_xlabel("left/right axis")
+    ax[1].set_ylabel("inferior/superior axis")
     ax[1].set_title("Coronal slice of image")
     img_view_sagital = ax[2].imshow(img_data[pos_init[0], :, :].T, origin='lower')
+    ax[2].set_xlabel("posterior/anterior axis")
+    ax[2].set_ylabel("inferior/superior axis")
     ax[2].set_title("Sagital slice of image")
 
     # adjust the main plot to make room for the sliders
@@ -121,7 +128,7 @@ def viewer3d(img_data, img_shape):
         range_axial = [int(pos_slider_axial.val[0]), int(pos_slider_axial.val[1])]
         range_coronal = [int(pos_slider_coronal.val[0]), int(pos_slider_coronal.val[1])]
         range_sagital = [int(pos_slider_sagital.val[0]), int(pos_slider_sagital.val[1])]
-        mip_axial, mip_coronal, mip_sagital = mip_img(img, range_axial, range_coronal, range_sagital)
+        mip_axial, mip_coronal, mip_sagital = mip_img(img_data, range_axial, range_coronal, range_sagital)
         img_view_axial.set_data(mip_axial.T)
         img_view_coronal.set_data(mip_coronal.T)
         img_view_sagital.set_data(mip_sagital.T)
@@ -140,7 +147,7 @@ def viewer3d(img_data, img_shape):
         range_axial = [int(pos_slider_axial.val[0]), int(pos_slider_axial.val[1])]
         range_coronal = [int(pos_slider_coronal.val[0]), int(pos_slider_coronal.val[1])]
         range_sagital = [int(pos_slider_sagital.val[0]), int(pos_slider_sagital.val[1])]
-        MIP_axial, MIP_coronal, MIP_sagital = MIP_img(img, range_axial, range_coronal, range_sagital)
+        MIP_axial, MIP_coronal, MIP_sagital = MIP_img(img_data, range_axial, range_coronal, range_sagital)
         img_view_axial.set_data(MIP_axial.T)
         img_view_coronal.set_data(MIP_coronal.T)
         img_view_sagital.set_data(MIP_sagital.T)

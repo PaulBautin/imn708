@@ -119,7 +119,7 @@ def gaussian_filter(img, sigma):
     """
 
     logging.debug("Using gradient magnitude!")
-    img_denoised = ndimage.gaussian_gradient_magnitude(img, sigma=sigma)
+    img_denoised = ndimage.gaussian_filter(img, sigma=sigma)
     return img_denoised
 
 
