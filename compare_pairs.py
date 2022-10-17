@@ -28,6 +28,7 @@ from functions.utils.io import load_image
 from functions.utils.manage_args import verify_file_exists, verify_file_is_nifti
 from functions.utils.image import assert_same_shape
 from functions.data_processing.joint_histogram import joint_hist
+from functions.data_processing.similarity_metrics import ssd, cr, IM
 
 
 def _build_arg_parser():
@@ -72,8 +73,9 @@ def main():
 
     # 3. Process data
     assert_same_shape((img_I, img_J))
-    joint_hist(img_I, img_J, bin=[256, 256])
-
+    ssd(img_I, img_J)
+    cr(img_I, img_J)
+    IM(img_I, img_J, bin=[256, 256])
 
 
 if __name__ == "__main__":
