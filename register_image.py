@@ -15,7 +15,6 @@ The complete example can be:
         --group_arg1 'Hello' --group_arg2 'You' --use_option_Y -v
 """
 
-
 # First import basic python libraries
 import argparse
 import logging
@@ -24,10 +23,13 @@ import logging
 # Encapsulate your methods in sub-files.
 # Give them understandable names
 # Import by alphabetical order for nicer view.
+from matplotlib.pyplot import imshow
+
+from functions.data_processing.rotate_image import rotate_image
 from functions.utils.io import load_image
 from functions.utils.manage_args import verify_file_exists, verify_file_is_nifti
 from functions.utils.image import assert_same_shape
-from functions.data_processing.joint_histogram import joint_hist
+from functions.data_processing.translate_image import translate_image
 
 
 def _build_arg_parser():
@@ -58,22 +60,24 @@ def main():
 
     # 1. Verifications
     verify_file_exists(args.filename_I)
-    verify_file_is_nifti(args.filename_I)
+    from_nifti_i = verify_file_is_nifti(args.filename_I)
     verify_file_exists(args.filename_J)
-    verify_file_is_nifti(args.filename_J)
+    from_nifti_j = verify_file_is_nifti(args.filename_J)
 
     logging_level = 'DEBUG' if args.verbose else 'INFO'
     logging.basicConfig(level=logging_level)
 
     # 2. Load data
     logging.info("Loading data")
-    img_I = load_image(args.filename_I, from_nifti=False)
-    img_J = load_image(args.filename_J, from_nifti=False)
-
+    img_I = load_image(args.filename_I, from_nifti_i)
+    img_J = load_image(args.filename_J, from_nifti_j)
+    ###########code should work with 2d image
+    ###########code should work with one image as input
     # 3. Process data
-    assert_same_shape((img_I, img_J))
-    joint_hist(img_I, img_J, bin=[256, 256])
-
+    p = 200.5
+    q = 300.5
+    translate_image(img_I, p, q)
+    rotate_image(img_I, 45)
 
 
 if __name__ == "__main__":
