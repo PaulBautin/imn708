@@ -28,7 +28,8 @@ from matplotlib.pyplot import imshow
 
 from functions.data_processing.register_rigid_ssd import register_rigid_ssd
 from functions.data_processing.register_translation_ssd import register_translation_ssd
-from functions.data_processing.rotate_image import rotate_image
+from functions.data_processing.register_rotation_ssd import register_rotation_ssd
+from functions.data_processing.rigid_transformation import rigid_transformation
 from functions.utils.io import load_image
 from functions.utils.manage_args import verify_file_exists, verify_file_is_nifti
 from functions.utils.image import assert_same_shape
@@ -77,13 +78,19 @@ def main():
     ###########code should work with 2d image
     ###########code should work with one image as input
     # 3. Process data
-    p = 50.9
-    q = 70
-    I_T = translate_image(img_I, p, q)
+    p = +40.05
+    q = +20.5
+    #I_T = translate_image(img_I, p, q)
+    #I_T_ssd = register_translation_ssd(img_I, I_T)
 
-    I_R=rotate_image(img_I, -176)
+    theta = 5
+    #I_R=rotate_image(img_I, theta)
+    #I_R_ssd = register_rotation_ssd(img_I, I_R)
 
-    I_T_ssd=register_translation_ssd(img_I, I_T)
+    I_Rigid = rigid_transformation(img_I, theta, p, q)
+    I_Rigid_ssd = register_rigid_ssd(img_I, I_Rigid)
+
+
 
 
 if __name__ == "__main__":

@@ -9,7 +9,16 @@ from mpl_toolkits import mplot3d
 def trans_rigid():
     xv, yv, zv = generate_3d_grid()
     transformation = transfo(xv, yv, zv, theta=0, omega=0, phi=0, p=0, q=0, r=0)
-    apply_transfo(xv, yv, zv, transformation)
+    transformation_m1 = np.matrix(
+        [[0.9045, -0.3847, -0.1840, 10.0000], [0.2939, 0.8750, -0.3847, 10.0000], [0.3090, 0.2939, 0.9045, 10.0000],
+         [0, 0, 0, 1.0000]])
+    transformation_m2 = np.matrix(
+        [[-0.0000, -0.2598, 0.1500, -3.0000], [0.0000, -0.1500, -0.2598, 1.5000], [0.3000, 0, 0, 0],
+         [0, 0, 0, 1.0000]])
+    transformation_m3 = np.matrix(
+        [[0.7182, -1.3727, -0.5660, 1.8115], [-1.9236, -4.6556, -2.5512, 0.2873], [-0.6426, -1.7985, -1.6285, 0.7404],
+         [0, 0, 0, 1.000]])
+    apply_transfo(xv, yv, zv, transformation_m3)
     similitude(xv, yv, zv, s=5)
 
 
@@ -19,9 +28,9 @@ def generate_3d_grid():
     method: str
         Should be either 'method1' or 'method2'
     """
-    x = np.arange(0, 20)
-    y = np.arange(0, 20)
-    z = np.arange(0, 5)
+    x = np.arange(0, 11)
+    y = np.arange(0, 11)
+    z = np.arange(0, 6)
     xv, yv, zv = np.meshgrid(x, y, z)
     return xv, yv, zv
 
@@ -32,11 +41,14 @@ def transfo(xv, yv, zv, theta=0, omega=0, phi=0, p=0, q=0, r=0):
     method: str
         Should be either 'method1' or 'method2'
     """
+    theta = np.deg2rad(theta)
+    omega = np.deg2rad(omega)
+    phi = np.deg2rad(phi)
     rot_x = np.matrix([[1, 0, 0, 0], [0, np.cos(theta), np.sin(theta), 0], [0, -np.sin(theta), np.cos(theta), 0], [0, 0, 0, 1]])
     rot_y = np.matrix([[np.cos(omega), 0, -np.sin(omega), 0], [0, 1, 0, 0], [np.sin(omega), 0, np.cos(omega), 0], [0, 0, 0, 1]])
     rot_z = np.matrix([[np.cos(phi), -np.sin(phi), 0, 0], [np.sin(phi), np.cos(phi), 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
     t = np.matrix([[1, 0, 0, p], [0, 1, 0, q], [0, 0, 1, r], [0, 0, 0, 0]])
-    transformation = rot_x @ rot_y @ rot_z + t
+    transformation = rot_x @ rot_y @ rot_z @ t
     return transformation
 
 
@@ -51,7 +63,12 @@ def apply_transfo(xv, yv, zv, transformation):
     xv_t = transformation[0, 0] * xv + transformation[0, 1] * yv + transformation[0, 2] * zv + transformation[0, 3]
     yv_t = transformation[1, 0] * xv + transformation[1, 1] * yv + transformation[1, 2] * zv + transformation[1, 3]
     zv_t = transformation[2, 0] * xv + transformation[2, 1] * yv + transformation[2, 2] * zv + transformation[2, 3]
+    ax.scatter3D(xv, yv, zv)
     ax.scatter3D(xv_t, yv_t, zv_t)
+    ax.set_xlabel("x axis")
+    ax.set_ylabel("y axis")
+    ax.set_zlabel("z axis")
+    ax.set_title("3D regular grid of points with transformation M3")
     plt.show()
 
 
@@ -66,7 +83,12 @@ def similitude(xv, yv, zv, s):
     xv_t = s * xv
     yv_t = s * yv
     zv_t = s * zv
+    ax.scatter3D(xv, yv, zv)
     ax.scatter3D(xv_t, yv_t, zv_t)
+    ax.set_xlabel("x axis")
+    ax.set_ylabel("y axis")
+    ax.set_zlabel("z axis")
+    ax.set_title("3D regular grid of points with scaling: s = 5")
     plt.show()
 
 

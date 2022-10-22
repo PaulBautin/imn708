@@ -38,7 +38,7 @@ def _load_png_jpg(filename):
         The loaded image, as a numpy array.
     """
     image = Image.open(filename).convert('L')
-    img = np.array(image)
+    img = np.array(image).astype(float)
     return img
 
 
