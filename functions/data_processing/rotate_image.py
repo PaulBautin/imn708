@@ -20,5 +20,6 @@ def rotate_image(I, theta):
             if (0 < int(i_r) < I.shape[0]) and (0 < int(j_r) < I.shape[1]):
                 I_R[int(i_r)][int(j_r)] = pixel_data
 
-    plt.imshow(I_R)
-    plt.show()
+    # plt.imshow(I_R)
+    # plt.show()
+    return I_R

@@ -18,6 +18,7 @@ The complete example can be:
 # First import basic python libraries
 import argparse
 import logging
+from matplotlib import pyplot as plt
 
 # Then import yours.
 # Encapsulate your methods in sub-files.
@@ -25,6 +26,8 @@ import logging
 # Import by alphabetical order for nicer view.
 from matplotlib.pyplot import imshow
 
+from functions.data_processing.register_rigid_ssd import register_rigid_ssd
+from functions.data_processing.register_translation_ssd import register_translation_ssd
 from functions.data_processing.rotate_image import rotate_image
 from functions.utils.io import load_image
 from functions.utils.manage_args import verify_file_exists, verify_file_is_nifti
@@ -74,10 +77,13 @@ def main():
     ###########code should work with 2d image
     ###########code should work with one image as input
     # 3. Process data
-    p = 200.5
-    q = 300.5
-    translate_image(img_I, p, q)
-    rotate_image(img_I, 45)
+    p = 50.9
+    q = 70
+    I_T = translate_image(img_I, p, q)
+
+    I_R=rotate_image(img_I, -176)
+
+    I_T_ssd=register_translation_ssd(img_I, I_T)
 
 
 if __name__ == "__main__":
