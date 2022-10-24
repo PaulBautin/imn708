@@ -79,17 +79,22 @@ def main():
     ###########code should work with 2d image
     ###########code should work with one image as input
     # 3. Process data
+    # register with SSD minimization using gradient descent on translation
     p = +40.05
     q = +20.5
     #I_T = translate_image(img_I, p, q)
     #I_T_ssd = register_translation_ssd(img_I, I_T)
 
+    # register with SSD minimization using gradient descent on rotation
     theta = 5
     #I_R=rotate_image(img_I, theta)
     #I_R_ssd = register_rotation_ssd(img_I, img_J)
 
+    # register with SSD minimization using gradient on rigid transfo
     #I_Rigid = rigid_transformation(img_I, theta, p, q)
     I_Rigid_ssd = register_rigid_ssd(img_I, img_J)
+
+    # register with SSD minimization using Powell method with rigid transfo
     #I_Rigid_ssd_min = register_rigid_ssd_min(img_I, img_J)
 
 
