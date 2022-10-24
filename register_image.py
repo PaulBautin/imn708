@@ -27,6 +27,7 @@ from matplotlib import pyplot as plt
 from matplotlib.pyplot import imshow
 
 from functions.data_processing.register_rigid_ssd import register_rigid_ssd
+from functions.data_processing.register_rigid_ssd import register_rigid_ssd_min
 from functions.data_processing.register_translation_ssd import register_translation_ssd
 from functions.data_processing.register_rotation_ssd import register_rotation_ssd
 from functions.data_processing.rigid_transformation import rigid_transformation
@@ -85,10 +86,11 @@ def main():
 
     theta = 5
     #I_R=rotate_image(img_I, theta)
-    #I_R_ssd = register_rotation_ssd(img_I, I_R)
+    #I_R_ssd = register_rotation_ssd(img_I, img_J)
 
-    I_Rigid = rigid_transformation(img_I, theta, p, q)
-    I_Rigid_ssd = register_rigid_ssd(img_I, I_Rigid)
+    #I_Rigid = rigid_transformation(img_I, theta, p, q)
+    I_Rigid_ssd = register_rigid_ssd(img_I, img_J)
+    #I_Rigid_ssd_min = register_rigid_ssd_min(img_I, img_J)
 
 
 

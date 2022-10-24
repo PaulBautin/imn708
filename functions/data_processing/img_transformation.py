@@ -18,6 +18,10 @@ def trans_rigid():
     transformation_m3 = np.matrix(
         [[0.7182, -1.3727, -0.5660, 1.8115], [-1.9236, -4.6556, -2.5512, 0.2873], [-0.6426, -1.7985, -1.6285, 0.7404],
          [0, 0, 0, 1.000]])
+
+    u, s, vh = np.linalg.svd(transformation_m3[:3, :3], full_matrices=True)
+    print(transformation_m3[:3, :3])
+    print(s)
     apply_transfo(xv, yv, zv, transformation_m3)
     similitude(xv, yv, zv, s=5)
 

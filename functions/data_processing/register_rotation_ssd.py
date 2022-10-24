@@ -63,7 +63,7 @@ def register_translation_ssd_m(I, J):
     return translate_image(I, P, Q)
 
 
-def register_rotation_ssd(I, J, epsilon=10**(-8)):
+def register_rotation_ssd(I, J, epsilon=0.5 * 10**(-8)):
     theta = 0
     I_r = rotate_image(I, theta)
     print_image(I, I_r, J)
@@ -74,7 +74,7 @@ def register_rotation_ssd(I, J, epsilon=10**(-8)):
     y = np.arange(0, I.shape[1])
     xv, yv = np.meshgrid(x, y)
 
-    for n in range(10):
+    for n in range(100):
         dSSD_dtheta = 2 * sum(sum((I_r - J) * (
                     np.gradient(I, axis=0) * (-xv * np.sin(theta) - yv * np.cos(theta)) + np.gradient(I, axis=1) * (
                         xv * np.cos(theta) - yv * np.sin(theta)))))
